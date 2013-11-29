@@ -39,7 +39,8 @@ namespace ECTunes.H_CAN_tester {
 		///     HCAN: Ticket
 		///     PEAK: Not-ticket
 		/// </summary>
-		private static int DEVICE = 1;
+		private static int DEVICE = 0;
+        private const String COM_PORT_IDENTIFIER = "Silicon Labs";
 
 		/// <summary>
 		/// Set true for debug
@@ -66,7 +67,7 @@ namespace ECTunes.H_CAN_tester {
 			///---------------------
 			///--- ComboBox Port ---
 			///---------------------
-			RefreshPort();
+			RefreshPort(COM_PORT_IDENTIFIER);
 
 			///------------------------
 			///--- ComboBox Baurate ---
@@ -307,17 +308,27 @@ namespace ECTunes.H_CAN_tester {
 
 		#region Update GUI
 
-		/// <summary>
-		/// Refreshing the COM ports and adding them to the combo box
-		/// </summary>
-		private void RefreshPort() {
-			cbbCONPort.Items.Clear();
-			foreach (string port in System.IO.Ports.SerialPort.GetPortNames()) {
-				cbbCONPort.Items.Add(port);
-			}
-			if (cbbCONPort.Items.Count > 0)
-				cbbCONPort.SelectedIndex = 0;
-		}
+        /// <summary>
+        /// Refreshing the COM ports and adding them to the combo box.
+        /// identifier must be the first text of the COM port description
+        /// </summary>
+        /// <param name="identifier"></param>
+        private void RefreshPort(String identifier) {
+            string[] portNames = System.IO.Ports.SerialPort.GetPortNames();
+            using (var searcher = new System.Management.ManagementObjectSearcher("SELECT * FROM WIN32_SerialPort")) {
+                var prts = searcher.Get().Cast<System.Management.ManagementBaseObject>().ToList();
+                var tList = (from n in portNames
+                             join p in prts on n equals p["DeviceID"].ToString()
+                             select p["Caption"] + ":" + n).ToList();
+                foreach (string s in tList) {
+                    if (s.Substring(0, identifier.Length).Equals(identifier)) {
+                        cbbCONPort.Items.Add(s.Substring(s.LastIndexOf(':') + 1));
+                    }
+                }
+                if (cbbCONPort.Items.Count > 0)
+                    cbbCONPort.SelectedIndex = 0;
+            }
+        }
 
 		/// <summary>
 		/// Enabling or disabling the different components according to the connected state
@@ -496,7 +507,7 @@ namespace ECTunes.H_CAN_tester {
 		#region EventHandlers
 		#region Connection Controls
 		private void btnCONRefresh_Click(object sender, EventArgs e) {
-			RefreshPort();
+			RefreshPort(COM_PORT_IDENTIFIER);
 		}
 
 		private void btnCONInit_Click(object sender, EventArgs e) {
