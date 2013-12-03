@@ -156,12 +156,12 @@
             // 
             // cbbCONPort
             // 
+            this.cbbCONPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbCONPort.FormattingEnabled = true;
             this.cbbCONPort.Location = new System.Drawing.Point(103, 36);
             this.cbbCONPort.Name = "cbbCONPort";
             this.cbbCONPort.Size = new System.Drawing.Size(121, 21);
             this.cbbCONPort.TabIndex = 0;
-            this.cbbCONPort.Text = "0";
             // 
             // lblCONPort
             // 
@@ -174,7 +174,7 @@
             // 
             // btnCONRefresh
             // 
-            this.btnCONRefresh.Location = new System.Drawing.Point(227, 33);
+            this.btnCONRefresh.Location = new System.Drawing.Point(227, 35);
             this.btnCONRefresh.Name = "btnCONRefresh";
             this.btnCONRefresh.Size = new System.Drawing.Size(75, 23);
             this.btnCONRefresh.TabIndex = 1;
@@ -184,8 +184,9 @@
             // 
             // cbbCONBaudrate
             // 
+            this.cbbCONBaudrate.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbCONBaudrate.FormattingEnabled = true;
-            this.cbbCONBaudrate.Location = new System.Drawing.Point(308, 36);
+            this.cbbCONBaudrate.Location = new System.Drawing.Point(315, 36);
             this.cbbCONBaudrate.Name = "cbbCONBaudrate";
             this.cbbCONBaudrate.Size = new System.Drawing.Size(121, 21);
             this.cbbCONBaudrate.TabIndex = 2;
@@ -193,7 +194,7 @@
             // lblCONBaudrate
             // 
             this.lblCONBaudrate.AutoSize = true;
-            this.lblCONBaudrate.Location = new System.Drawing.Point(308, 20);
+            this.lblCONBaudrate.Location = new System.Drawing.Point(319, 20);
             this.lblCONBaudrate.Name = "lblCONBaudrate";
             this.lblCONBaudrate.Size = new System.Drawing.Size(50, 13);
             this.lblCONBaudrate.TabIndex = 4;
@@ -201,8 +202,9 @@
             // 
             // cbbCONType
             // 
+            this.cbbCONType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbCONType.FormattingEnabled = true;
-            this.cbbCONType.Location = new System.Drawing.Point(435, 36);
+            this.cbbCONType.Location = new System.Drawing.Point(442, 36);
             this.cbbCONType.Name = "cbbCONType";
             this.cbbCONType.Size = new System.Drawing.Size(36, 21);
             this.cbbCONType.TabIndex = 3;
@@ -210,7 +212,7 @@
             // lblCONType
             // 
             this.lblCONType.AutoSize = true;
-            this.lblCONType.Location = new System.Drawing.Point(432, 20);
+            this.lblCONType.Location = new System.Drawing.Point(443, 20);
             this.lblCONType.Name = "lblCONType";
             this.lblCONType.Size = new System.Drawing.Size(31, 13);
             this.lblCONType.TabIndex = 6;
@@ -218,7 +220,7 @@
             // 
             // btnCONInit
             // 
-            this.btnCONInit.Location = new System.Drawing.Point(484, 34);
+            this.btnCONInit.Location = new System.Drawing.Point(484, 36);
             this.btnCONInit.Name = "btnCONInit";
             this.btnCONInit.Size = new System.Drawing.Size(75, 23);
             this.btnCONInit.TabIndex = 4;
@@ -229,7 +231,7 @@
             // btnCONRelease
             // 
             this.btnCONRelease.Enabled = false;
-            this.btnCONRelease.Location = new System.Drawing.Point(565, 34);
+            this.btnCONRelease.Location = new System.Drawing.Point(565, 36);
             this.btnCONRelease.Name = "btnCONRelease";
             this.btnCONRelease.Size = new System.Drawing.Size(75, 23);
             this.btnCONRelease.TabIndex = 5;
@@ -239,13 +241,13 @@
             // 
             // gbxConnection
             // 
+            this.gbxConnection.Controls.Add(this.lblCONType);
+            this.gbxConnection.Controls.Add(this.lblCONBaudrate);
             this.gbxConnection.Controls.Add(this.lblCONDevice);
             this.gbxConnection.Controls.Add(this.cbbCONDevice);
             this.gbxConnection.Controls.Add(this.chkVolFromXml);
             this.gbxConnection.Controls.Add(this.chkDebug);
-            this.gbxConnection.Controls.Add(this.lblCONType);
             this.gbxConnection.Controls.Add(this.btnCONRelease);
-            this.gbxConnection.Controls.Add(this.lblCONBaudrate);
             this.gbxConnection.Controls.Add(this.cbbCONPort);
             this.gbxConnection.Controls.Add(this.btnCONInit);
             this.gbxConnection.Controls.Add(this.lblCONPort);
@@ -270,6 +272,7 @@
             // 
             // cbbCONDevice
             // 
+            this.cbbCONDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
             this.cbbCONDevice.Enabled = false;
             this.cbbCONDevice.FormattingEnabled = true;
             this.cbbCONDevice.Items.AddRange(new object[] {
@@ -283,7 +286,7 @@
             // chkVolFromXml
             // 
             this.chkVolFromXml.AutoSize = true;
-            this.chkVolFromXml.Location = new System.Drawing.Point(424, 6);
+            this.chkVolFromXml.Location = new System.Drawing.Point(477, 8);
             this.chkVolFromXml.Name = "chkVolFromXml";
             this.chkVolFromXml.Size = new System.Drawing.Size(92, 17);
             this.chkVolFromXml.TabIndex = 10;
@@ -294,7 +297,7 @@
             // chkDebug
             // 
             this.chkDebug.AutoSize = true;
-            this.chkDebug.Location = new System.Drawing.Point(572, 6);
+            this.chkDebug.Location = new System.Drawing.Point(572, 8);
             this.chkDebug.Name = "chkDebug";
             this.chkDebug.Size = new System.Drawing.Size(58, 17);
             this.chkDebug.TabIndex = 9;
@@ -502,9 +505,9 @@
             // tabCTRLControls
             // 
             this.tabCTRLControls.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tabCTRLControls.Controls.Add(this.cbbCTRLSelCar);
             this.tabCTRLControls.Controls.Add(this.pnlCTRLControls);
             this.tabCTRLControls.Controls.Add(this.lblCTRLSelCar);
-            this.tabCTRLControls.Controls.Add(this.cbbCTRLSelCar);
             this.tabCTRLControls.Location = new System.Drawing.Point(4, 22);
             this.tabCTRLControls.Name = "tabCTRLControls";
             this.tabCTRLControls.Padding = new System.Windows.Forms.Padding(3);
@@ -1170,6 +1173,7 @@
             // 
             // cbbCTRLSelCar
             // 
+            this.cbbCTRLSelCar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbCTRLSelCar.FormattingEnabled = true;
             this.cbbCTRLSelCar.Location = new System.Drawing.Point(68, 6);
             this.cbbCTRLSelCar.Name = "cbbCTRLSelCar";
@@ -1238,7 +1242,7 @@
             this.Controls.Add(this.gbxConnection);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "ECT CAN Tester";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.gbxConnection.ResumeLayout(false);
             this.gbxConnection.PerformLayout();
             this.gbxSendData.ResumeLayout(false);

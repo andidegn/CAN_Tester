@@ -39,13 +39,17 @@ namespace ECTunes.H_CAN_tester {
 		///     HCAN: Ticket
 		///     PEAK: Not-ticket
 		/// </summary>
-		private static int DEVICE = 0;
+        private static int DEVICE = 0;
+
+        private const String VERSION = "0.5.2";
         private const String COM_PORT_IDENTIFIER = "Silicon Labs";
 
 		/// <summary>
 		/// Set true for debug
 		/// </summary>
 		public static bool DEBUG = false;
+
+        public const String TITLE = "CAN Tester";
 
 		private bool connected;
 		private bool carSelected;
@@ -61,13 +65,19 @@ namespace ECTunes.H_CAN_tester {
 			InitializeComponent();
 			InitializeRest();
 			ToggleAdvanced();
+            this.Text = "ECTunes CAN Tester v" + VERSION;
 		}
 
 		private void InitializeRest() {
 			///---------------------
 			///--- ComboBox Port ---
 			///---------------------
-			RefreshPort(COM_PORT_IDENTIFIER);
+            if (DEVICE == 0)
+			    RefreshPort(COM_PORT_IDENTIFIER);
+            else {
+                cbbCONPort.Enabled = false;
+                btnCONRefresh.Enabled = false;
+            }
 
 			///------------------------
 			///--- ComboBox Baurate ---
@@ -90,7 +100,7 @@ namespace ECTunes.H_CAN_tester {
 			///---------------------
 			///--- ComboBox Type ---
 			///---------------------
-			cbbCONType.Items.AddRange(new String[3]{"0", "1", "2"});
+            cbbCONType.Items.AddRange(new String[3] { "0", "1", "2" });
 			cbbCONType.SelectedIndex = 2;
 
 			///---------------
@@ -237,7 +247,15 @@ namespace ECTunes.H_CAN_tester {
 		/// <param name="length"></param>
 		/// <param name="value"></param>
 		private void CheckAndSend(String signal, int length, String value) {
-			CheckAndSend(signal, length, Convert.ToInt32(value));
+            try {
+                CheckAndSend(signal, length, Convert.ToInt32(value));
+            } catch (Exception) {
+                MessageBox.Show("There is an error in the xml file.\nCar:\t" + 
+                    car + 
+                    "\nSignal:\t" + 
+                    signal +
+                    "\nValue:\t", TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 		}
 
 		/// <summary>
@@ -283,19 +301,27 @@ namespace ECTunes.H_CAN_tester {
 		/// Calling the LoadDLL and ConnectHCAN and setting the connected state accordingly
 		/// </summary>
 		private void Connect() {
-			int port = int.Parse(cbbCONPort.SelectedItem.ToString().Substring(3));
+			int port = 0;
 			int baudrate = (cbbCONBaudrate.SelectedItem as Baudrate).Value;
 			int type = int.Parse(cbbCONType.SelectedItem.ToString());
 
 			String device = cbbCONDevice.SelectedItem.ToString();
-			if (device == "H-CAN")
-				can = new ECT_HCAN();
-			else if (device == "PEAK")
+			if (device == "H-CAN") {
+                can = new ECT_HCAN();
+                port = int.Parse(cbbCONPort.SelectedItem.ToString().Substring(3));
+            } else if (device == "PEAK")
 				can = new ECT_Peak();
 
 			try {
-				can.Init(port, baudrate * 1000);
-				SetConnectedState(true);
+                if (!can.Init(port, baudrate * 1000)) {
+                    MessageBox.Show(this, 
+                        "Error connecting to CAN device!" + (device == "H_CAN" ? "\nPlease check if the correct COM port is selected." : 
+                        "\nPlease make sure the device is properly connected to the computer."), 
+                        TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    SetConnectedState(false);
+                } else {
+                    SetConnectedState(true);
+                }
 			} catch {
 				SetConnectedState(false);
 			} finally {
@@ -314,6 +340,7 @@ namespace ECTunes.H_CAN_tester {
         /// </summary>
         /// <param name="identifier"></param>
         private void RefreshPort(String identifier) {
+            cbbCONPort.Items.Clear();
             string[] portNames = System.IO.Ports.SerialPort.GetPortNames();
             using (var searcher = new System.Management.ManagementObjectSearcher("SELECT * FROM WIN32_SerialPort")) {
                 var prts = searcher.Get().Cast<System.Management.ManagementBaseObject>().ToList();
@@ -334,16 +361,18 @@ namespace ECTunes.H_CAN_tester {
 		/// Enabling or disabling the different components according to the connected state
 		/// </summary>
 		/// <param name="state"></param>
-		private void SetConnectedState(bool state) {
-			cbbCONPort.Enabled = !state;
-			cbbCONBaudrate.Enabled = !state;
-			cbbCONType.Enabled = !state;
-			btnCONRefresh.Enabled = !state;
-			btnCONInit.Enabled = !state;
-			btnCONRelease.Enabled = state;
-			cbbCONDevice.Enabled = false;
+        private void SetConnectedState(bool state) {
+            if (DEVICE == 0) {
+                cbbCONPort.Enabled = !state;
+                btnCONRefresh.Enabled = !state;
+            }
+            cbbCONBaudrate.Enabled = !state;
+            cbbCONType.Enabled = !state;
+            btnCONInit.Enabled = !state;
+            btnCONRelease.Enabled = state;
+            cbbCONDevice.Enabled = false;
 
-			connected = state;
+            connected = state;
 		}
 
 		/// <summary>
@@ -523,7 +552,6 @@ namespace ECTunes.H_CAN_tester {
 
 		#region Gear Controls
 		private void btnCTRLDrive_Click(object sender, EventArgs e) {
-			tbxCTRLGearValue.Text = "D";
 			CheckAndSend(Signal.DRIVE, (int)nudSDLength.Value, CodeList.getInstance()[car, Signal.DRIVE, Param.MATCH]);
 		}
 
@@ -699,10 +727,15 @@ namespace ECTunes.H_CAN_tester {
 		private void btnCTRLLoadFile_Click(object sender, EventArgs e) {
 			String path = GetLoadFilePath();
 			if (path.Length > 0) {
-				CodeList.getInstance().PopulateList(GetXMLNodes(path));
-				tbxCTRLXml.Text = CodeList.getInstance().ToString();
-				UpdateCbbCTRLSelCar();
-				SetControlPanelState();
+                try {
+                    XmlNode file = GetXMLNodes(path);
+                    CodeList.getInstance().PopulateList(file);
+                    tbxCTRLXml.Text = CodeList.getInstance().ToString();
+                    UpdateCbbCTRLSelCar();
+                    SetControlPanelState();
+                } catch (Exception) {
+                    MessageBox.Show("Error loading file XML.", TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 			}
 		}
 
@@ -733,5 +766,10 @@ namespace ECTunes.H_CAN_tester {
 		private void chkDebug_CheckedChanged(object sender, EventArgs e) {
 			DEBUG = chkDebug.Checked;
 		}
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
+            if (can != null && can.IsConnected())
+                can.Release();
+        }
 	}
 }
