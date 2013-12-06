@@ -69,15 +69,6 @@ namespace ECTunes.H_CAN_tester {
 		}
 
 		private void InitializeRest() {
-			///---------------------
-			///--- ComboBox Port ---
-			///---------------------
-            if (DEVICE == 0)
-			    RefreshPort(COM_PORT_IDENTIFIER);
-            else {
-                cbbCONPort.Enabled = false;
-                btnCONRefresh.Enabled = false;
-            }
 
 			///------------------------
 			///--- ComboBox Baurate ---
@@ -307,6 +298,10 @@ namespace ECTunes.H_CAN_tester {
 
 			String device = cbbCONDevice.SelectedItem.ToString();
 			if (device == "H-CAN") {
+                if (cbbCONPort.SelectedItem == null) {
+                    ShowConnectErrorBox();
+                    return;
+                }
                 can = new ECT_HCAN();
                 port = int.Parse(cbbCONPort.SelectedItem.ToString().Substring(3));
             } else if (device == "PEAK")
@@ -314,11 +309,7 @@ namespace ECTunes.H_CAN_tester {
 
 			try {
                 if (!can.Init(port, baudrate * 1000)) {
-                    MessageBox.Show(this, 
-                        "Error connecting to CAN device!" + (device == "H_CAN" ? "\nPlease check if the correct COM port is selected." : 
-                        "\nPlease make sure the device is properly connected to the computer."), 
-                        TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    SetConnectedState(false);
+                    ShowConnectErrorBox();
                 } else {
                     SetConnectedState(true);
                 }
@@ -329,6 +320,17 @@ namespace ECTunes.H_CAN_tester {
 				if (DEBUG) MessageBox.Show(String.Format("port: {0}  -> baudrate: {1}  -> type: {2}  -> connected: {3}", port, baudrate, type, (connected ? "OK" : "FAIL")));
 			}
 		}
+
+        /// <summary>
+        /// Shows an error box containing relevant information
+        /// </summary>
+        private void ShowConnectErrorBox() {
+            MessageBox.Show(this,
+                "Error connecting to CAN device!" + (DEVICE == 0 ? "\nHCAN":"\nPEAK") +
+                " not detected!\nPlease make sure the device is properly connected to the computer.",
+                TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            SetConnectedState(false);
+        }
 
 		#endregion
 
@@ -370,7 +372,7 @@ namespace ECTunes.H_CAN_tester {
             cbbCONType.Enabled = !state;
             btnCONInit.Enabled = !state;
             btnCONRelease.Enabled = state;
-            cbbCONDevice.Enabled = false;
+            cbbCONDevice.Enabled = !state;
 
             connected = state;
 		}
@@ -770,6 +772,21 @@ namespace ECTunes.H_CAN_tester {
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
             if (can != null && can.IsConnected())
                 can.Release();
+        }
+
+        private void cbbCONDevice_SelectedIndexChanged(object sender, EventArgs e) {
+            DEVICE = ((ComboBox)sender).SelectedIndex;
+            ///---------------------
+            ///--- ComboBox Port ---
+            ///---------------------
+            if (DEVICE == 0) {
+                cbbCONPort.Enabled = true;
+                btnCONRefresh.Enabled = true;
+                RefreshPort(COM_PORT_IDENTIFIER);
+            } else {
+                cbbCONPort.Enabled = false;
+                btnCONRefresh.Enabled = false;
+            }
         }
 	}
 }

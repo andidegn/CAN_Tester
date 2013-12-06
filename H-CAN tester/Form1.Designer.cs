@@ -60,6 +60,7 @@
             this.btnCTRLLoadFile = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabCTRLControls = new System.Windows.Forms.TabPage();
+            this.cbbCTRLSelCar = new System.Windows.Forms.ComboBox();
             this.pnlCTRLControls = new System.Windows.Forms.Panel();
             this.pnlCTRLSIndexF = new System.Windows.Forms.Panel();
             this.lblCTRLSIndexF = new System.Windows.Forms.Label();
@@ -122,7 +123,6 @@
             this.btnCTRLReverse = new System.Windows.Forms.Button();
             this.tbxCTRLGearValue = new System.Windows.Forms.TextBox();
             this.lblCTRLSelCar = new System.Windows.Forms.Label();
-            this.cbbCTRLSelCar = new System.Windows.Forms.ComboBox();
             this.tabCTRLtbxXml = new System.Windows.Forms.TabPage();
             this.tbxCTRLXml = new System.Windows.Forms.TextBox();
             this.ttCTRLTkb = new System.Windows.Forms.ToolTip(this.components);
@@ -272,8 +272,7 @@
             // 
             // cbbCONDevice
             // 
-            this.cbbCONDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
-            this.cbbCONDevice.Enabled = false;
+            this.cbbCONDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbCONDevice.FormattingEnabled = true;
             this.cbbCONDevice.Items.AddRange(new object[] {
             "H-CAN",
@@ -282,6 +281,7 @@
             this.cbbCONDevice.Name = "cbbCONDevice";
             this.cbbCONDevice.Size = new System.Drawing.Size(81, 21);
             this.cbbCONDevice.TabIndex = 11;
+            this.cbbCONDevice.SelectedIndexChanged += new System.EventHandler(this.cbbCONDevice_SelectedIndexChanged);
             // 
             // chkVolFromXml
             // 
@@ -514,6 +514,16 @@
             this.tabCTRLControls.Size = new System.Drawing.Size(624, 266);
             this.tabCTRLControls.TabIndex = 0;
             this.tabCTRLControls.Text = "Controls";
+            // 
+            // cbbCTRLSelCar
+            // 
+            this.cbbCTRLSelCar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbbCTRLSelCar.FormattingEnabled = true;
+            this.cbbCTRLSelCar.Location = new System.Drawing.Point(68, 6);
+            this.cbbCTRLSelCar.Name = "cbbCTRLSelCar";
+            this.cbbCTRLSelCar.Size = new System.Drawing.Size(143, 21);
+            this.cbbCTRLSelCar.TabIndex = 0;
+            this.cbbCTRLSelCar.SelectedIndexChanged += new System.EventHandler(this.cbbCTRLSelCar_SelectedIndexChanged);
             // 
             // pnlCTRLControls
             // 
@@ -1170,16 +1180,6 @@
             this.lblCTRLSelCar.Size = new System.Drawing.Size(56, 13);
             this.lblCTRLSelCar.TabIndex = 1;
             this.lblCTRLSelCar.Text = "Select Car";
-            // 
-            // cbbCTRLSelCar
-            // 
-            this.cbbCTRLSelCar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbbCTRLSelCar.FormattingEnabled = true;
-            this.cbbCTRLSelCar.Location = new System.Drawing.Point(68, 6);
-            this.cbbCTRLSelCar.Name = "cbbCTRLSelCar";
-            this.cbbCTRLSelCar.Size = new System.Drawing.Size(143, 21);
-            this.cbbCTRLSelCar.TabIndex = 0;
-            this.cbbCTRLSelCar.SelectedIndexChanged += new System.EventHandler(this.cbbCTRLSelCar_SelectedIndexChanged);
             // 
             // tabCTRLtbxXml
             // 
