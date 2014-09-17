@@ -41,7 +41,7 @@ namespace ECTunes.H_CAN_tester {
 		/// </summary>
         private static int DEVICE = 0;
 
-        private const String VERSION = "0.5.2";
+        private const String VERSION = "0.6.0";
         private const String COM_PORT_IDENTIFIER = "Silicon Labs";
 
 		/// <summary>
